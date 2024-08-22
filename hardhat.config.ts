@@ -29,6 +29,7 @@ extendEnvironment(async (hre) => {
   hre.changeNetwork = async function changeNetwork(newNetwork: string) {
     hre.network.name = newNetwork;
     hre.network.config = hre.config.networks[newNetwork];
+    //@ts-ignore
     hre.ethers.provider = new hre.ethers.providers.JsonRpcProvider(hre.network.config.url);
     hre.network.provider = await createProvider(hre.config, newNetwork);
   }
@@ -36,10 +37,15 @@ extendEnvironment(async (hre) => {
 
 const config: HardhatUserConfig = {
   solidity: "0.8.19",
-  defaultNetwork: 'ethereumSepolia', // Source Chain
+  defaultNetwork: 'hardhat', // Source Chain
   networks: {
     hardhat: {
-      chainId: 31337
+      chainId: 31337,
+      accounts: {
+        accountsBalance: "100000000000000000"
+      },
+      gas: "auto"
+
     },
     ethereumSepolia: {
       url: ETHEREUM_SEPOLIA_RPC_URL !== undefined ? ETHEREUM_SEPOLIA_RPC_URL : '',
